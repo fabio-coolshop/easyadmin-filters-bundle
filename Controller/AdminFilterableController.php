@@ -201,7 +201,7 @@ class AdminFilterableController extends AdminController {
 	}
 	
 	private function getTemplateList(){
-		return sprintf('@%s/list-filters.html.twig',preg_replace('/Bundle.*/','',__NAMESPACE__));
+		return '@EasyAdminFilters/list-filters.html.twig';
 	}
 
 }
