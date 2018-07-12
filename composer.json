@@ -1,0 +1,27 @@
+{
+	"name": "coolshop/easyadmin-filters-bundle",
+	"description": "Filters for EasyAdmin",
+	"keywords": [
+		"easyadmin",
+		"filters",
+		"coolshop"
+	],
+	"type": "symfony-bundle",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Fabio Giughese",
+			"email": "fabio@coolshop.it"
+		}
+	],
+	"require": {
+		"php": ">=5.6",
+		"symfony/symfony": "~3.4",
+		"javiereguiluz/easyadmin-bundle": "^1.17"
+	},
+	"autoload": {
+		"psr-4": {
+			"Coolshop\\EasyAdminFilters\\": ""
+		}
+	}
+}

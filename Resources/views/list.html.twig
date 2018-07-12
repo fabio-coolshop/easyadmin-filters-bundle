@@ -1,0 +1,14 @@
+{% extends '@EasyAdmin/default/list.html.twig' %}
+
+{% use '@EasyAdminFilters/form/filters.html.twig' %}
+
+{% block body_class 'list list-filtered list-' ~ _entity_config.name|lower %}
+
+{% block content_header %}
+	{% block content_title_wrapper %}{% endblock %}
+	{{ block('filters') }}
+{% endblock content_header %}
+
+{% block body_javascript %}
+	{{ parent() }}
+{% endblock %}
