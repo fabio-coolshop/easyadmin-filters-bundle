@@ -23,5 +23,11 @@
 		"psr-4": {
 			"Coolshop\\EasyAdminFilters\\": ""
 		}
-	}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "master"
+		}
+	},
+	"minimum-stability": "dev"
 }
