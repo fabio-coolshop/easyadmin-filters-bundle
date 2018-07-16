@@ -7,14 +7,14 @@
 				<!-- Filtri -->
 				<div class="col-lg-9 col-md-8 col-sm-12">
 					<div class="row">
-						<input type="hidden" name="action" value="search">
+						<input type="hidden" name="action" value="filter">
 						<input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
 						<input type="hidden" name="sortField" value="{{ _request_parameters.sortField }}">
 						<input type="hidden" name="sortDirection" value="{{ _request_parameters.sortDirection }}">
 						<input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
 						<input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
 
-						{% for block in filters %}
+						{% for block in _entity_config.list.filters %}
 							{% with block %}
 
 								{% if block(type) is not defined %}
@@ -72,7 +72,7 @@
 		<div class="filter-field-label">{{ property }}</div>
 		<div class="filter-field-datetime-start">
 			<div>
-				<input autocomplete="off" data-date-format="DD-MM-YYYY HH:mm" class="form-control datetimepicker" name="query[{{ property }}][start]" value="{{ app.request.get('query')[property]['start']|default('') }}" placeholder="{{ 'start_date' | trans }}">
+				<input autocomplete="off" data-date-format="DD-MM-YYYY HH:mm" class="form-control datetimepicker" name="filters[{{ property }}][start]" value="{{ app.request.get('filters')[property]['start']|default('') }}" placeholder="{{ 'start_date' | trans }}">
 			</div>
 		</div>
 		<div class="filter-field-datetime-icon">
@@ -80,7 +80,7 @@
 		</div>
 		<div class="filter-field-datetime-end">
 			<div>
-				<input autocomplete="off" data-date-format="DD-MM-YYYY HH:mm" class="form-control datetimepicker" name="query[{{ property }}][end]" value="{{ app.request.get('query')[property]['end']|default('') }}" placeholder="{{ 'end_date' | trans }}">
+				<input autocomplete="off" data-date-format="DD-MM-YYYY HH:mm" class="form-control datetimepicker" name="filters[{{ property }}][end]" value="{{ app.request.get('filters')[property]['end']|default('') }}" placeholder="{{ 'end_date' | trans }}">
 			</div>
 		</div>
 	</div>
@@ -105,7 +105,7 @@
 	{% set async = async|default(false) %}
 	{% set type_options = {theme:'bootstrap',placeholder:'Search in '~property|humanize}|merge(type_options) %}
 	{% set label = label|default('') %}
-	{% set value = app.request.get('query')[property]|default('') %}
+	{% set value = app.request.get('filters')[property]|default('') %}
 
 	{% if not async %}
 		{% if choices is function %}
@@ -126,7 +126,7 @@
 
 	<div class="col-lg-{{ size }} col-md-4 col-sm-6 filter-field">
 		<div class="filter-label">{{ property | trans }}</div>
-		<select class="form-control" name="query[{{ property }}]" id="{{ id }}" {{ flatAttributes({data:type_options}) }} {{ flatAttributes(attr) }}>
+		<select class="form-control" name="filters[{{ property }}]" id="{{ id }}" {{ flatAttributes({data:type_options}) }} {{ flatAttributes(attr) }}>
 
 			{% if async and value %}
 				<option value="{{ value }}" selected>{{ findOneBy(choices,value) }}</option>
@@ -178,7 +178,7 @@
 									key:"{{ key|default('id') }}",
 									label:"{{ label }}",
 									target:'{{ choices|replace({'\\':'\\\\'}) }}',
-									query:params.term
+									value:params.term
 								};
 							},
 							processResults:function(data,params){
@@ -215,7 +215,7 @@
 
 	<div class="col-lg-{{ size }} col-md-4 col-sm-6">
 		<div class="filter-label">{{ property | trans }}</div>
-		<input type="text" class="form-control" name="query[{{ property }}]" value="{{ app.request.get('query')[property]|default('') }}"/>
+		<input type="text" class="form-control" name="filters[{{ property }}]" value="{{ app.request.get('filters')[property]|default('') }}"/>
 	</div>
 
 {% endblock %}

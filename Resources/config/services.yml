@@ -1,0 +1,15 @@
+services:
+
+  easyadmin.filters.template:
+    class: Coolshop\EasyAdminFilters\Configuration\ReplaceTemplateListPass
+    calls:
+      - [ setContainer, [ '@service_container' ] ]
+    tags:
+      - { name: easyadmin.config_pass, priority: 100 }
+
+  easyadmin.filters.config:
+    class: Coolshop\EasyAdminFilters\Configuration\FiltersConfigPass
+    calls:
+      - [ setContainer, [ '@service_container' ] ]
+    tags:
+      - { name: easyadmin.config_pass, priority: 0 }
