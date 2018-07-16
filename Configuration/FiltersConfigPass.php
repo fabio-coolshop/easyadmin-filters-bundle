@@ -107,7 +107,7 @@ class FiltersConfigPass implements ConfigPassInterface {
 					break;
 				default:
 					$filter = array_replace_recursive($filter,array( // override
-						"nullable" => $entity['properties'][$filter['property']]['nullable'],
+						"nullable" => isset($entity['properties'][$filter['property']]['nullable'])? $entity['properties'][$filter['property']]['nullable'] : false,
 					));
 					break;
 			}
