@@ -23,7 +23,7 @@ class ReplaceTemplateListPass implements ConfigPassInterface {
 		if(isset($backendConfig['entities'])){
 			foreach($backendConfig['entities'] as &$entity){
 				if(isset($entity['list']) && isset($entity['list']['filters'])){
-					$entity['templates']['list'] = '@EasyAdminFilters/list.html.twig';
+					$entity['templates']['list'] = isset($entity['templates']['list'])? $entity['templates']['list'] : '@EasyAdminFilters/list.html.twig';
 					$entity['templates']['search'] = $entity['templates']['list'];
 				}
 			}

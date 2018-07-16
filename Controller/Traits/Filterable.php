@@ -108,11 +108,11 @@ trait Filterable {
 			
 			$propertyParts = explode('.',$field['property']);
 			
-			$value = isset($searchQuery[$field['property']])? $searchQuery[$field['property']] : $this->getDefaultValue($field['type']);
+			$value = isset($searchQuery[$field['property']])? $searchQuery[$field['property']] : $this->getDefaultTypeValue($field['type']);
 			
 			$fieldName = $propertyParts[0];
 			
-			if($value !== $this->getDefaultValue($field['type'])){
+			if($value !== $this->getDefaultTypeValue($field['type'])){
 				
 				if($value == 'null'){
 					
@@ -124,9 +124,9 @@ trait Filterable {
 					
 					$joinBase = "entity";
 					
+					$entityConfig = $this->entity;
+					
 					if($field['subField']){
-						
-						$entityConfig = $this->entity;
 						
 						foreach($propertyParts as $subProperty){
 							
@@ -199,98 +199,6 @@ trait Filterable {
 		return $queryBuilder;
 	}
 	
-	private function getFilter($filter, $entity = null) {
-		
-		$query = $this->request->query->get('query',array());
-		
-		if(!$entity){
-			$entity = $this->entity;
-		}
-		
-		if(is_string($filter)){
-			$filter = array('property' => $filter);
-		}
-		
-		$nameParts = explode('.',$filter['property']);
-		
-		if(!isset($entity['properties'][ $filter['property'] ]) && isset($entity['properties'][ $nameParts[0] ])){
-			
-			$entityConfig = $this->getEntityConfiguration($entity['properties'][ $nameParts[0] ]['targetEntity']);
-			
-			$propertyBaseFieldName = array_shift($nameParts);
-			
-			$filter['property'] = implode('.',$nameParts);
-			
-			$filter = $this->calculateFilter($filter,$entityConfig);
-
-			/** @var EntityManager $em */
-			$em = $this->getDoctrine()->getManager();
-			
-			$filter['property'] = $propertyBaseFieldName.".".implode(".",$nameParts);
-			$filter['fieldName'] = "query[".$filter['property']."]";
-			$filter['value'] = isset($query[$filter['property']])? $query[$filter['property']] : $this->getDefaultTypeValue($filter['type']);
-
-			try{
-				$filter['subField'] = $entityConfig['properties'][array_pop($nameParts)];
-			}catch(\Exception $e){}
-			
-		}elseif(isset($entity['properties'][ $filter['property'] ])){
-			
-			$filter['subField'] = false;
-			
-			if(!isset($filter['type'])){
-				$filter['type'] = $entity['properties'][ $filter['property'] ]['dataType'];
-			}
-			
-			$filter = array_replace_recursive(array(
-				"type_options" => array(),
-				"attr" => array(),
-				"size" => 2,
-			),$filter);
-			
-			switch($filter['type']){
-				case 'association':
-					$filter = array_replace_recursive(array( // add if not exists
-						"choices" => $entity['properties'][ $filter['property'] ]['targetEntity'],
-					),$filter,array( // override
-						"type" => "choice",
-						"nullable" => true,
-					));
-					break;
-				default:
-					$filter = array_replace_recursive($filter,array( // override
-						"nullable" => $entity['properties'][$filter['property']]['nullable'],
-					));
-					break;
-			}
-			
-			$filter['fieldName'] = "query[".$filter['property']."]";
-			$filter['value'] = isset($query[$filter['property']])? $query[$filter['property']] : $this->getDefaultTypeValue($filter['type']);
-			
-		}else{
-			
-			$filter = array_replace_recursive(array(
-				"type_options" => array(),
-				"attr" => array(),
-				"size" => 2,
-				"nullable" => false,
-			),$filter);
-			
-		}
-		
-		return $filter;
-		
-	}
-	
-	private function getDefaultTypeValue($type){
-		switch($type){
-			case 'datetime':
-				return array('start'=>'','end'=>'');
-			default:
-				return '';
-		}
-	}
-	
 	public function dynamicVariables() {
 		return array(
 			"<EntityName>" => $this->entity['name'],
@@ -299,6 +207,11 @@ trait Filterable {
 	}
 	
 	protected function executeDynamicMethod($methodNamePattern,array $arguments = array()) {
+		
+		switch($methodNamePattern){
+			case "render<EntityName>Template": $methodNamePattern .= '<ViewName>';
+				break;
+		}
 		
 		$dynamicVariables = $this->dynamicVariables();
 		
@@ -322,6 +235,15 @@ trait Filterable {
 	
 	public function getEntityConfiguration($class){
 		return array_values($this->config['entities'])[array_search($class, array_column($this->config['entities'], 'class'))];
+	}
+	
+	private function getDefaultTypeValue($type){
+		switch($type){
+			case 'datetime':
+				return array('start'=>'','end'=>'');
+			default:
+				return '';
+		}
 	}
 	
 }
