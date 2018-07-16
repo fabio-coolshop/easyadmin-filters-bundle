@@ -65,7 +65,7 @@ trait Filterable {
 		$queryKey = ",e.{$query['key']}";
 		$queryLabel = $query['label']?",e.{$query['label']}":'';
 		
-		$queryBuilder = $this->container->getDoctrine()->getManager()->createQueryBuilder('e')->select("e $queryKey $queryLabel")->from($query['target'], 'e');
+		$queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder('e')->select("e $queryKey $queryLabel")->from($query['target'], 'e');
 		
 		if($query['label']){
 			$queryBuilder->where("e.{$query['label']} LIKE :value")->setParameter(':value', "%{$query['value']}%");

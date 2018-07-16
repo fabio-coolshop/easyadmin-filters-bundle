@@ -121,7 +121,7 @@
 		{% endif %}
 		{% set type_options = {minimumResultsForSearch:-1}|merge(type_options) %}
 	{% else %}
-		{% set type_options = {entity:_entity_config.name,action:'ajaxsearch',minimumInputLength:3}|merge(type_options) %}
+		{% set type_options = {entity:_entity_config.name,action:'ajaxFilter',minimumInputLength:3}|merge(type_options) %}
 	{% endif %}
 
 	<div class="col-lg-{{ size }} col-md-4 col-sm-6 filter-field">

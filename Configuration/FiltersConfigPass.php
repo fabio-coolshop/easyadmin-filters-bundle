@@ -37,7 +37,7 @@ class FiltersConfigPass implements ConfigPassInterface {
 								$filter['type'] = $entity['list']['fields'][ $filter['property'] ]['dataType'];
 							}
 							
-							$filter = array_merge_recursive(array(
+							$filter = array_replace_recursive(array(
 								"type_options" => array(),
 								"attr" => array(),
 								"size" => 2,
